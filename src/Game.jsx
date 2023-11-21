@@ -20,7 +20,7 @@ export function Game(props) {
     return () => {
       window.removeEventListener('keydown', handleSpacebar);
     };
-  }, [activePlayerIndex, teams]);
+  }, [activePlayerIndex, teams, handleTimerToggle]);
 
   const handleTimerToggle = () => {
     if(teams[activePlayerIndex]?.isLost === false || activePlayerIndex === null) {
