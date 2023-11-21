@@ -51,6 +51,9 @@ function App() {
     for(let i = 0; i < teamNumber; i++) {
       let time
       switch (teamsDificulty[i]) {
+          default:
+              time = 0;
+              break;
           case 1:
               time = 60;
               break;
