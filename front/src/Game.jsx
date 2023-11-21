@@ -8,11 +8,11 @@ export function Game(props) {
   const [activePlayerIndex, setActivePlayerIndex] = useState(null);
   const [pause, setPause] = useState(false);
 
-
   useEffect(() => {
     const handleSpacebar = (event) => {
       if (event.code === 'Space') {
         handleTimerToggle();
+        console.log('spacebar pressed'); 
       }
     };
 
@@ -23,30 +23,35 @@ export function Game(props) {
   }, [activePlayerIndex, teams]);
 
   const handleTimerToggle = () => {
-    if (pause === false) {
-        setTeams((currentPlayers) => {
-          return currentPlayers.map((player, index) => {
-            if (index === activePlayerIndex) {
-              return { ...player, isActive: false };
-            }
-            return player;
-          });
-        });
-
-        const nextPlayerIndex = activePlayerIndex === null ? 0 : (activePlayerIndex + 1) % teams.length;
-        setActivePlayerIndex(nextPlayerIndex);
-
-        setPause(true);
-    }else{
-        setTeams((currentPlayers) => {
-            return currentPlayers.map((player, index) => {
+    if(teams[activePlayerIndex]?.isLost === false || activePlayerIndex === null) {
+        if (pause === false) {
+            setTeams((currentPlayers) => {
+              return currentPlayers.map((player, index) => {
                 if (index === activePlayerIndex) {
-                return { ...player, isActive: true };
+                  return { ...player, isActive: false, time: player.time + 10 };
                 }
                 return player;
+              });
             });
-            });
-        setPause(false);
+
+            const nextPlayerIndex = activePlayerIndex === null ? 0 : (activePlayerIndex + 1) % teams.length;
+            setActivePlayerIndex(nextPlayerIndex);
+
+            setPause(true);
+        }else{
+            setTeams((currentPlayers) => {
+                return currentPlayers.map((player, index) => {
+                    if (index === activePlayerIndex) {
+                    return { ...player, isActive: true };
+                    }
+                    return player;
+                });
+                });
+            setPause(false);
+        }
+    }else{
+        const nextPlayerIndex = activePlayerIndex === null ? 0 : (activePlayerIndex + 1) % teams.length;
+        setActivePlayerIndex(nextPlayerIndex);
     }
   };
 
@@ -57,6 +62,9 @@ export function Game(props) {
         setTeams((currentPlayers) => {
           return currentPlayers.map((player, index) => {
             if (index === activePlayerIndex) {
+                if (player.time === 0) {
+                    return { ...player, isLost: true, isActive: false };
+                }
               return { ...player, time: player.time - 1 };
             }
             return player;
@@ -73,7 +81,7 @@ export function Game(props) {
     <div>
       {teams.map((player) => (
         <div key={player.id}>
-          Team {player.name}: {player.time}s {player.isActive ? '(Actif)' : ''}
+          Team {player.name}: {player.time}s {player.isActive ? '(Actif)' : ''} {player.isLost ? '(You lost)' : ''}
         </div>
       ))}
     

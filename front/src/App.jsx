@@ -70,6 +70,7 @@ function App() {
         time: time,
         dificulty: teamsDificulty[i],
         isActive: false,
+        isLost: false,
       }
       players.push(player);
     }
