@@ -1,0 +1,92 @@
+import React from "react";
+
+function App() {
+  const [teamNumber, setTeamsNumber] = React.useState(2);
+  const [teamsDificulty, setTeamsDificulty] = React.useState([2,2]);
+  const [selectedDificulty, setSelectedDificulty] = React.useState(1);
+
+  const handleDifficultyChange = (e) => {
+    e.preventDefault();
+    setSelectedDificulty(e.target.id);
+  }
+
+  const handleAddTeam = (e) => {
+    e.preventDefault();
+    if(teamNumber >= 6){
+      alert("You can't have more than 6 players");
+      return;
+    }
+    setTeamsNumber(teamNumber + 1);
+    setTeamsDificulty([...teamsDificulty, 2]);
+  }
+
+  const handleRemoveTeam = (e) => {
+    e.preventDefault();
+    if(teamNumber > 2){
+      setTeamsNumber(teamNumber - 1);
+      let newTeamsDificulty = [...teamsDificulty];
+      newTeamsDificulty.pop();
+      setTeamsDificulty(newTeamsDificulty);
+    }else{
+      alert("You need at least 2 players");
+    }
+    
+  }
+
+  const handleTeamDifficulty = (e) => {
+    e.preventDefault();
+    //set the dificulty of the team like [1,1,3,1] for team 3
+    let newTeamsDificulty = [...teamsDificulty];
+    newTeamsDificulty[selectedDificulty-1] = e.target.id;
+    setTeamsDificulty(newTeamsDificulty);
+  }
+
+  let playersFields = [];
+  for(let i = 0; i < teamNumber; i++) {
+    playersFields.push(
+      <>
+        <label htmlFor={`player ${i+1}`}>Team {i+1}: </label>
+        <input className="px-2 py-0 box-border mx-2" type="text" name={`player ${i+1}`} placeholder="Team name" />
+        <button id={i+1} onClick={handleDifficultyChange} className={`btn ${(selectedDificulty == i+1) ? "bg-light text-black border-2" : "bg-dark text-light border-2"}`}>Change dificulty</button>
+      </>
+    );
+  }
+
+  return (
+    <main className="bg-dark text-white w-screen h-screen">
+      <div className="container h-full grid">
+        <div className="flex justify-center">
+          <h1 className="text-5xl font-bold">Lo-GOO!!</h1>
+        </div>
+        <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center gap-2 pb-5">
+              <h2>Game dificulty for team {selectedDificulty}:</h2>
+              <div className="flex gap-5">
+                <button id={1} onClick={handleTeamDifficulty} className={`btn bg-easy ${(teamsDificulty[selectedDificulty-1] == 1) ? "border-2 border-solid border-light" : ""}`}>Easy</button>
+                <button id={2} onClick={handleTeamDifficulty} className={`btn bg-medium ${(teamsDificulty[selectedDificulty-1] == 2) ? "border-2 border-solid border-light" : ""}`}>Medium</button>
+                <button id={3} onClick={handleTeamDifficulty} className={`btn bg-hard ${(teamsDificulty[selectedDificulty-1] == 3) ? "border-2 border-solid border-light" : ""}`}>Hard</button>
+                <button id={4} onClick={handleTeamDifficulty} className={`btn bg-extrem ${(teamsDificulty[selectedDificulty-1] == 4) ? "border-2 border-solid border-light" : ""}`}>Extrem</button>
+              </div>
+            </div>
+          <div className="flex gap-5 pb-5">
+            <button className="btn bg-green-500" onClick={handleAddTeam}>Add Team</button>
+            <button className="btn bg-red-500" onClick={handleRemoveTeam}>Remove Team</button>
+          </div>
+          <form action="" className="flex gap-2 flex-col">
+            {playersFields.map((field,index) => 
+            <div className="flex" key={index}>
+              {field}
+            </div>
+            )}
+            <input type="submit" value="Send" />
+          </form>
+        </div>
+        <div>
+
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default App;
