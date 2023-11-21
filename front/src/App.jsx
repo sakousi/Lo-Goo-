@@ -5,6 +5,9 @@ function App() {
   const [teamsDificulty, setTeamsDificulty] = React.useState([2,2]);
   const [selectedDificulty, setSelectedDificulty] = React.useState(1);
 
+  //dumping the localstorage
+  localStorage.setItem('players', JSON.stringify([]));
+
   const handleDifficultyChange = (e) => {
     e.preventDefault();
     setSelectedDificulty(e.target.id);
@@ -37,8 +40,42 @@ function App() {
     e.preventDefault();
     //set the dificulty of the team like [1,1,3,1] for team 3
     let newTeamsDificulty = [...teamsDificulty];
-    newTeamsDificulty[selectedDificulty-1] = e.target.id;
+    newTeamsDificulty[selectedDificulty-1] = parseInt(e.target.id);
     setTeamsDificulty(newTeamsDificulty);
+    console.log(teamsDificulty);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let players = [];
+    for(let i = 0; i < teamNumber; i++) {
+      let time
+      switch (teamsDificulty[i]) {
+          case 1:
+              time = 60;
+              break;
+          case 2:
+              time = 45;
+              break;
+          case 3:
+              time = 30;
+              break;
+          case 4:
+              time = 15;
+              break;
+          }
+      let player = {
+        id: i+1,
+        name: e.target[`player ${i+1}`].value,
+        time: time,
+        dificulty: teamsDificulty[i],
+        isActive: false,
+      }
+      players.push(player);
+    }
+    console.log(players);
+    localStorage.setItem('players', JSON.stringify(players));
+    window.location.href = "/game";
   }
 
   let playersFields = [];
@@ -46,7 +83,7 @@ function App() {
     playersFields.push(
       <>
         <label htmlFor={`player ${i+1}`}>Team {i+1}: </label>
-        <input className="px-2 py-0 box-border mx-2" type="text" name={`player ${i+1}`} placeholder="Team name" />
+        <input className="px-2 py-0 box-border mx-2 text-black" type="text" name={`player ${i+1}`} placeholder="Team name" />
         <button id={i+1} onClick={handleDifficultyChange} className={`btn ${(selectedDificulty == i+1) ? "bg-light text-black border-2" : "bg-dark text-light border-2"}`}>Change dificulty</button>
       </>
     );
@@ -72,13 +109,13 @@ function App() {
             <button className="btn bg-green-500" onClick={handleAddTeam}>Add Team</button>
             <button className="btn bg-red-500" onClick={handleRemoveTeam}>Remove Team</button>
           </div>
-          <form action="" className="flex gap-2 flex-col">
+          <form onSubmit={handleSubmit} className="flex gap-2 flex-col">
             {playersFields.map((field,index) => 
             <div className="flex" key={index}>
               {field}
             </div>
             )}
-            <input type="submit" value="Send" />
+            <input type="submit" className="btn bg-green-700" value={'Start da game'}/>
           </form>
         </div>
         <div>
