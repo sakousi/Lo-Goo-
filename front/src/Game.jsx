@@ -78,14 +78,11 @@ export function Game(props) {
   }, [activePlayerIndex, teams]);
 
   return (
-    <div>
-      {teams.map((player) => (
-        <div key={player.id}>
-          Team {player.name}: {player.time}s {player.isActive ? '(Actif)' : ''} {player.isLost ? '(You lost)' : ''}
-        </div>
-      ))}
-    
-    </div>
+    <main className='bg-dark h-screen w-screen text-white flex flex-col justify-center items-center'>
+        <h1 className='text-2xl'>Team to play: {teams[activePlayerIndex].name}</h1>
+        <p >Time remaining: <i className={`${(teams[activePlayerIndex].time >= 5)? "text-red": ""}`}>{teams[activePlayerIndex].time}</i></p>
+        <p>Timer status: {pause ? "Game paused" : "Time to guess"}</p>
+    </main>
   );
 };
 export default Game;
