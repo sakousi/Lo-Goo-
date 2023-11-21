@@ -85,7 +85,7 @@ function App() {
       <>
         <label htmlFor={`player ${i+1}`}>Team {i+1}: </label>
         <input className="px-2 py-0 box-border mx-2 text-black" type="text" name={`player ${i+1}`} placeholder="Team name" />
-        <button id={i+1} onClick={handleDifficultyChange} className={`btn ${(selectedDificulty == i+1) ? "bg-light text-black border-2" : "bg-dark text-light border-2"}`}>Change dificulty</button>
+        <button id={i+1} onClick={handleDifficultyChange} className={`btn ${(selectedDificulty === i+1) ? "bg-light text-black border-2" : "bg-dark text-light border-2"}`}>Change dificulty</button>
       </>
     );
   }
@@ -100,10 +100,10 @@ function App() {
             <div className="flex flex-col items-center gap-2 pb-5">
               <h2>Game dificulty for team {selectedDificulty}:</h2>
               <div className="flex gap-5">
-                <button id={1} onClick={handleTeamDifficulty} className={`btn bg-easy ${(teamsDificulty[selectedDificulty-1] == 1) ? "border-2 border-solid border-light" : ""}`}>Easy</button>
-                <button id={2} onClick={handleTeamDifficulty} className={`btn bg-medium ${(teamsDificulty[selectedDificulty-1] == 2) ? "border-2 border-solid border-light" : ""}`}>Medium</button>
-                <button id={3} onClick={handleTeamDifficulty} className={`btn bg-hard ${(teamsDificulty[selectedDificulty-1] == 3) ? "border-2 border-solid border-light" : ""}`}>Hard</button>
-                <button id={4} onClick={handleTeamDifficulty} className={`btn bg-extrem ${(teamsDificulty[selectedDificulty-1] == 4) ? "border-2 border-solid border-light" : ""}`}>Extrem</button>
+                <button id={1} onClick={handleTeamDifficulty} className={`btn bg-easy ${(teamsDificulty[selectedDificulty-1] === 1) ? "border-2 border-solid border-light" : ""}`}>Easy</button>
+                <button id={2} onClick={handleTeamDifficulty} className={`btn bg-medium ${(teamsDificulty[selectedDificulty-1] === 2) ? "border-2 border-solid border-light" : ""}`}>Medium</button>
+                <button id={3} onClick={handleTeamDifficulty} className={`btn bg-hard ${(teamsDificulty[selectedDificulty-1] === 3) ? "border-2 border-solid border-light" : ""}`}>Hard</button>
+                <button id={4} onClick={handleTeamDifficulty} className={`btn bg-extrem ${(teamsDificulty[selectedDificulty-1] === 4) ? "border-2 border-solid border-light" : ""}`}>Extrem</button>
               </div>
             </div>
           <div className="flex gap-5 pb-5">
