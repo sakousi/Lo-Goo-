@@ -8,20 +8,6 @@ export function Game(props) {
   const [activePlayerIndex, setActivePlayerIndex] = useState(null);
   const [pause, setPause] = useState(false);
 
-  useEffect(() => {
-    const handleSpacebar = (event) => {
-      if (event.code === 'Space') {
-        handleTimerToggle();
-        console.log('spacebar pressed'); 
-      }
-    };
-
-    window.addEventListener('keydown', handleSpacebar);
-    return () => {
-      window.removeEventListener('keydown', handleSpacebar);
-    };
-  }, [activePlayerIndex, teams, handleTimerToggle]);
-
   const handleTimerToggle = () => {
     if(teams[activePlayerIndex]?.isLost === false || activePlayerIndex === null) {
         if (pause === false) {
@@ -54,6 +40,20 @@ export function Game(props) {
         setActivePlayerIndex(nextPlayerIndex);
     }
   };
+
+  useEffect(() => {
+    const handleSpacebar = (event) => {
+      if (event.code === 'Space') {
+        handleTimerToggle();
+        console.log('spacebar pressed'); 
+      }
+    };
+
+    window.addEventListener('keydown', handleSpacebar);
+    return () => {
+      window.removeEventListener('keydown', handleSpacebar);
+    };
+  }, [activePlayerIndex, teams, handleTimerToggle]);
 
   useEffect(() => {
     let interval = null;
