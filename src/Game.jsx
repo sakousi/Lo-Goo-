@@ -85,7 +85,7 @@ export function Game(props) {
           (activePlayerIndex !== null) ? (
         <>
           <h1 className='text-2xl'>Team to play: {teams[activePlayerIndex].name}</h1>
-          <p >Time remaining: <i className={`${(teams[activePlayerIndex].time >= 5)? "text-red": ""}`}>{teams[activePlayerIndex].time}</i></p>
+          <p >Time remaining: <i className={`${(teams[activePlayerIndex].time <= 10)? "text-red-500": ""}`}>{teams[activePlayerIndex].time}</i></p>
           <p>Timer status: {pause ? "Game paused" : "Time to guess"}</p>
         </>
         ) : (
