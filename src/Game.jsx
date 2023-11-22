@@ -1,5 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
+import { act } from 'react-dom/test-utils';
 
 export function Game(props) {
 
@@ -7,6 +8,21 @@ export function Game(props) {
   const [teams, setTeams] = useState(sotred);
   const [activePlayerIndex, setActivePlayerIndex] = useState(null);
   const [pause, setPause] = useState(false);
+
+
+  useEffect(() => {
+    const handleSpacebar = (event) => {
+      if (event.code === 'Space') {
+        handleTimerToggle();
+        console.log('spacebar pressed'); 
+      }
+    };
+
+    window.addEventListener('keydown', handleSpacebar);
+    return () => {
+      window.removeEventListener('keydown', handleSpacebar);
+    };
+  }, [activePlayerIndex, teams]);
 
   const handleTimerToggle = () => {
     if(teams[activePlayerIndex]?.isLost === false || activePlayerIndex === null) {
@@ -42,20 +58,6 @@ export function Game(props) {
   };
 
   useEffect(() => {
-    const handleSpacebar = (event) => {
-      if (event.code === 'Space') {
-        handleTimerToggle();
-        console.log('spacebar pressed'); 
-      }
-    };
-
-    window.addEventListener('keydown', handleSpacebar);
-    return () => {
-      window.removeEventListener('keydown', handleSpacebar);
-    };
-  }, [activePlayerIndex, teams, handleTimerToggle]);
-
-  useEffect(() => {
     let interval = null;
     if (teams[activePlayerIndex]?.isActive) {
       interval = setInterval(() => {
@@ -79,9 +81,17 @@ export function Game(props) {
 
   return (
     <main className='bg-dark h-screen w-screen text-white flex flex-col justify-center items-center'>
-        <h1 className='text-2xl'>Team to play: {teams[activePlayerIndex].name}</h1>
-        <p >Time remaining: <i className={`${(teams[activePlayerIndex].time >= 5)? "text-red": ""}`}>{teams[activePlayerIndex].time}</i></p>
-        <p>Timer status: {pause ? "Game paused" : "Time to guess"}</p>
+        {
+          (activePlayerIndex !== null) ? (
+        <>
+          <h1 className='text-2xl'>Team to play: {teams[activePlayerIndex].name}</h1>
+          <p >Time remaining: <i className={`${(teams[activePlayerIndex].time >= 5)? "text-red": ""}`}>{teams[activePlayerIndex].time}</i></p>
+          <p>Timer status: {pause ? "Game paused" : "Time to guess"}</p>
+        </>
+        ) : (
+          <h1 className='text-2xl'>Press spacebar to start the game</h1>
+        )
+        }
     </main>
   );
 };
