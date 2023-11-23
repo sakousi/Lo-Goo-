@@ -1,98 +1,89 @@
 import React from 'react';
-import {useState, useEffect} from 'react';
-import { act } from 'react-dom/test-utils';
+import { useState, useEffect } from 'react';
+import RenderRound from './rounds/RenderRound';
 
-export function Game(props) {
+export function Game() {
+  const [currentRound, setCurrentRound] = useState(0);
 
-  const sotred = JSON.parse(localStorage.getItem('players'));
-  const [teams, setTeams] = useState(sotred);
-  const [activePlayerIndex, setActivePlayerIndex] = useState(null);
-  const [pause, setPause] = useState(false);
+  const handleStartGame = () => {
+    if (currentRound === 0) {
+      setCurrentRound(1);
+    }
+  }
 
+  const handleNextRound = () => {
+    if (currentRound <= 4) {
+      setCurrentRound(currentRound + 1);
+      return;
+    }
+    window.location.href = '/end';
+
+  }
+
+  const handlePreviousRound = () => {
+    if (currentRound > 0) {
+      setCurrentRound(currentRound - 1);
+      return;
+    }
+  }
 
   useEffect(() => {
-    const handleSpacebar = (event) => {
-      if (event.code === 'Space') {
-        handleTimerToggle();
-        console.log('spacebar pressed'); 
+    const handleEnter = (event) => {
+      if (event.code === 'Enter') {
+        console.log('Enter pressed');
+        if (currentRound === 0) {
+          handleStartGame();
+        }
+        if (currentRound > 0) {
+          handleNextRound();
+        }
       }
     };
 
-    window.addEventListener('keydown', handleSpacebar);
+    window.addEventListener('keydown', handleEnter);
     return () => {
-      window.removeEventListener('keydown', handleSpacebar);
+      window.removeEventListener('keydown', handleEnter);
     };
-  }, [activePlayerIndex, teams]);
-
-  const handleTimerToggle = () => {
-    if(teams[activePlayerIndex]?.isLost === false || activePlayerIndex === null) {
-        if (pause === false) {
-            setTeams((currentPlayers) => {
-              return currentPlayers.map((player, index) => {
-                if (index === activePlayerIndex) {
-                  return { ...player, isActive: false, time: player.time + 10 };
-                }
-                return player;
-              });
-            });
-
-            const nextPlayerIndex = activePlayerIndex === null ? 0 : (activePlayerIndex + 1) % teams.length;
-            setActivePlayerIndex(nextPlayerIndex);
-
-            setPause(true);
-        }else{
-            setTeams((currentPlayers) => {
-                return currentPlayers.map((player, index) => {
-                    if (index === activePlayerIndex) {
-                    return { ...player, isActive: true };
-                    }
-                    return player;
-                });
-                });
-            setPause(false);
-        }
-    }else{
-        const nextPlayerIndex = activePlayerIndex === null ? 0 : (activePlayerIndex + 1) % teams.length;
-        setActivePlayerIndex(nextPlayerIndex);
-    }
-  };
-
-  useEffect(() => {
-    let interval = null;
-    if (teams[activePlayerIndex]?.isActive) {
-      interval = setInterval(() => {
-        setTeams((currentPlayers) => {
-          return currentPlayers.map((player, index) => {
-            if (index === activePlayerIndex) {
-                if (player.time === 0) {
-                    return { ...player, isLost: true, isActive: false };
-                }
-              return { ...player, time: player.time - 1 };
-            }
-            return player;
-          });
-        });
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [activePlayerIndex, teams]);
+  }, []);
 
   return (
-    <main className='bg-dark h-screen w-screen text-white flex flex-col justify-center items-center'>
-        {
-          (activePlayerIndex !== null) ? (
-        <>
-          <h1 className='text-2xl'>Team to play: {teams[activePlayerIndex].name}</h1>
-          <p >Time remaining: <i className={`${(teams[activePlayerIndex].time <= 10)? "text-red-500": ""}`}>{teams[activePlayerIndex].time}</i></p>
-          <p>Timer status: {pause ? "Game paused" : "Time to guess"}</p>
-        </>
+    <>
+      {
+        (currentRound !== 0) ? (
+          <>
+            <GameStarted handlePreviousRound={handlePreviousRound} handleNextRound={handleNextRound} currentRound={currentRound} />
+          </>
         ) : (
-          <h1 className='text-2xl'>Press spacebar to start the game</h1>
+          <GameStarter handleStartGame={handleStartGame} />
         )
-        }
-    </main>
+      }
+    </>
   );
 };
+
+function GameStarter(props) {
+  const handleStartGame = () => {
+    props.handleStartGame();
+  }
+  return (
+    <main className='bg-dark h-screen w-screen text-white flex flex-col justify-center items-center'>
+      <h1 className='text-4xl font-bold'>Press enter or click the button to start the game !</h1>
+      <button className='btn bg-green-500' onClick={handleStartGame}>Start !</button>
+    </main>
+  )
+}
+
+function GameStarted(props) {
+
+  return (
+    <main className='bg-dark h-screen w-screen text-white pt-5 flex flex-col justify-between items-center'>
+      <div className='flex gap-2'>
+        <button onClick={props.handlePreviousRound} className='btn bg-red-500'>Previous Round</button>
+        <button onClick={props.handleNextRound} className='btn bg-green-500'>Next Round</button>
+      </div>
+      <RenderRound round={props.currentRound} />
+      <div></div>
+    </main>
+  )
+}
 export default Game;

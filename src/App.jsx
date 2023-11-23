@@ -49,28 +49,9 @@ function App() {
     e.preventDefault();
     let players = [];
     for(let i = 0; i < teamNumber; i++) {
-      let time
-      switch (teamsDificulty[i]) {
-          default:
-              time = 0;
-              break;
-          case 1:
-              time = 60;
-              break;
-          case 2:
-              time = 45;
-              break;
-          case 3:
-              time = 30;
-              break;
-          case 4:
-              time = 15;
-              break;
-          }
       let player = {
         id: i+1,
         name: e.target[`player ${i+1}`].value,
-        time: time,
         dificulty: teamsDificulty[i],
         isActive: false,
         isLost: false,
